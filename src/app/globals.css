@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-inter);
+
+  --radius-4xl: 35px;
+  --radius-3xl: 30px;
+  --radius-2xl: 25px;
+  --radius-xl: 20px;
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+
+  --color-primary: #34AAFF;
+  --color-secondary: #6FC3FF;
+
+  --color-background: #EDF3F7;
+  --color-surface: #FFFFFF;
+  --color-foreground: #25343E;
+
+  --color-success: #007600;
+  --color-error: #4C4085;
+  --color-warning: #8F5100;
+
+  --shadow-card: 0px 10px 40px 0px #4C5A7F26;
+  --shadow-hover-accent: 0px 15px 15px -8px #34AAFF8C;
+}
+
+
+@utility bg-accent-hover {
+  background-image: linear-gradient(to bottom, #6FC3FF, #179EFF);
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 25s linear infinite;
+}
+
