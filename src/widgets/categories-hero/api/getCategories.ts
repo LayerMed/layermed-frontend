@@ -87,5 +87,21 @@ const MOCK_CATEGORIES: Category[] = [
 ];
 
 export async function getCategories(): Promise<Category[]> {
+  const apiUrl = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL;
+
+  if (apiUrl) {
+    try {
+      const res = await fetch(`${apiUrl}/api/categories`, {
+        cache: 'no-store', // Always fetch fresh data in dev mode
+      });
+
+      if (res.ok) {
+        return res.json();
+      }
+    } catch (err) {
+      console.warn('Backend API unavailable, falling back to mock categories data:', err);
+    }
+  }
+
   return MOCK_CATEGORIES;
 }

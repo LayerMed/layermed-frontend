@@ -60,4 +60,13 @@ ALWAYS use project CSS variables / theme tokens instead of raw Tailwind colors (
 - **Border Radius Tokens:**
   - `rounded-sm` (8px), `rounded-md` (12px), `rounded-lg` (16px), `rounded-xl` (20px), `rounded-2xl` (25px), `rounded-3xl` (30px), `rounded-4xl` (35px)
 
+---
+
+## Environment Variables & Backend Integration
+- Backend API URL configuration is stored in `.env.local` (`NEXT_PUBLIC_API_URL` and `API_URL`).
+- `.env.example` serves as the template for environment variables.
+- Widget API layers (`widget/api/`) MUST read `process.env.API_URL` or `process.env.NEXT_PUBLIC_API_URL`.
+- If the backend API is unavailable or offline during local testing, API layers MUST gracefully fall back to mock data without breaking page rendering.
+
+
 
