@@ -68,5 +68,28 @@ ALWAYS use project CSS variables / theme tokens instead of raw Tailwind colors (
 - Widget API layers (`widget/api/`) MUST read `process.env.API_URL` or `process.env.NEXT_PUBLIC_API_URL`.
 - If the backend API is unavailable or offline during local testing, API layers MUST gracefully fall back to mock data without breaking page rendering.
 
+---
+
+## Common Widget Visual Styling & Layout Rules
+
+ALL section-level widgets (in `src/widgets/`) MUST strictly adhere to the following visual style guidelines:
+
+1. **Outer Widget Section Container:**
+   - Always wrap widget root in `<section className="p-5 pt-10 bg-white rounded-[45px] my-6">` (or `bg-surface rounded-[45px] p-5 pt-10 my-6`).
+   - Standard rounding for section containers is `rounded-[45px]`, padding is `p-5 pt-10`, vertical margin `my-6`.
+
+2. **Widget Header Layout:**
+   - Padding container: `px-3 mb-8 text-center flex flex-col items-center`
+   - Section Title `<h2>`: `font-bold text-[40px] leading-[1.1] mb-3.5 text-foreground`
+   - Subtitle `<p>`: `max-w-[829px] text-[#95A8B4] font-medium`
+
+3. **Buttons & Actions:**
+   - ALWAYS use the shared `Button` primitive from `@/shared/ui` (`import { Button } from '@/shared/ui'`).
+   - Bottom CTA buttons for viewing all items MUST use `variant="accent"` with `hasImage={true}` wrapped in a `Link` centered at the bottom (`flex justify-center mt-8`).
+
+4. **Sliders & Carousels:**
+   - DO NOT render custom pagination dots or arrow navigation buttons unless explicitly requested by the user.
+   - Prefer clean auto-playing instances with an accent CTA button below the slider.
+
 
 

@@ -1,0 +1,168 @@
+import { apiClient } from '@/shared/api/axios';
+import { Doctor } from '../model/types';
+
+export const MOCK_DOCTORS: Doctor[] = [
+  {
+    id: 'doc-1',
+    name: 'Александра Иванова',
+    specialty: 'Кардиолог, Врач высшей категории',
+    experience: 14,
+    rating: 4.9,
+    reviewsCount: 128,
+    avatarUrl: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=400',
+    clinic: 'Центральная клиника',
+    city: 'Ташкент',
+    isOnline: true,
+    price: {
+      reception: 3500,
+      examination: 5000,
+      consultation: 4200,
+    },
+  },
+  {
+    id: 'doc-2',
+    name: 'Дмитрий Смирнов',
+    specialty: 'Невролог, К.М.Н.',
+    experience: 11,
+    rating: 3.8,
+    reviewsCount: 95,
+    avatarUrl: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=400',
+    clinic: 'МедЦентр Плюс',
+    city: 'Ташкент',
+    isOnline: false,
+    price: {
+      reception: 4000,
+      examination: 6200,
+      consultation: 5000,
+    },
+  },
+  {
+    id: 'doc-3',
+    name: 'Елена Кузнецова',
+    specialty: 'Дерматолог, Косметолог',
+    experience: 8,
+    rating: 4.95,
+    reviewsCount: 160,
+    avatarUrl: 'https://images.unsplash.com/photo-1614608682850-e04149611416?auto=format&fit=crop&q=80&w=400',
+    clinic: 'Бьюти Мед',
+    city: 'Ташкент',
+    isOnline: true,
+    price: {
+      reception: 3000,
+      examination: 4500,
+      consultation: 3800,
+    },
+  },
+  {
+    id: 'doc-4',
+    name: 'Михаил Ковалев',
+    specialty: 'Ортопед-Травматолог',
+    experience: 16,
+    rating: 2.7,
+    reviewsCount: 110,
+    avatarUrl: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=400',
+    clinic: 'Орто Клиник',
+    city: 'Ташкент',
+    isOnline: false,
+    price: {
+      reception: 4200,
+      examination: 6500,
+      consultation: 5500,
+    },
+  },
+  {
+    id: 'doc-5',
+    name: 'Ольга Сергеева',
+    specialty: 'Терапевт, Гастроэнтеролог',
+    experience: 12,
+    rating: 4.9,
+    reviewsCount: 142,
+    avatarUrl: 'https://images.unsplash.com/photo-1527613426441-4da17471b66d?auto=format&fit=crop&q=80&w=400',
+    clinic: 'Здоровье 24/7',
+    city: 'Ташкент',
+    isOnline: true,
+    price: {
+      reception: 2800,
+      examination: 4000,
+      consultation: 3500,
+    },
+  },
+  {
+    id: 'doc-6',
+    name: 'Сергей Морозов',
+    specialty: 'Офтальмолог, Хирург',
+    experience: 19,
+    rating: 5.0,
+    reviewsCount: 205,
+    avatarUrl: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&q=80&w=400',
+    clinic: 'ОфтальмоЦентр',
+    city: 'Ташкент',
+    isOnline: true,
+    price: {
+      reception: 4500,
+      examination: 7000,
+      consultation: 5800,
+    },
+  },
+  {
+    id: 'doc-7',
+    name: 'Анна Васильева',
+    specialty: 'Педиатр',
+    experience: 7,
+    rating: 3.5,
+    reviewsCount: 88,
+    avatarUrl: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&q=80&w=400',
+    clinic: 'Детская клиника',
+    city: 'Ташкент',
+    isOnline: false,
+    price: {
+      reception: 2900,
+      examination: 4200,
+      consultation: 3600,
+    },
+  },
+  {
+    id: 'doc-8',
+    name: 'Виктор Попов',
+    specialty: 'Эндокринолог',
+    experience: 15,
+    rating: 4.88,
+    reviewsCount: 134,
+    avatarUrl: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?auto=format&fit=crop&q=80&w=400',
+    clinic: 'ЭндоМед',
+    city: 'Ташкент',
+    isOnline: true,
+    price: {
+      reception: 3600,
+      examination: 5400,
+      consultation: 4500,
+    },
+  },
+  {
+    id: 'doc-9',
+    name: 'Мария Лебедева',
+    specialty: 'Аллерголог-Иммунолог',
+    experience: 10,
+    rating: 2.2,
+    reviewsCount: 97,
+    avatarUrl: 'https://images.unsplash.com/photo-1651008376811-b90baee60c1f?auto=format&fit=crop&q=80&w=400',
+    clinic: 'АллергоЦентр',
+    city: 'Ташкент',
+    isOnline: false,
+    price: {
+      reception: 3200,
+      examination: 4800,
+      consultation: 4000,
+    },
+  },
+];
+
+export async function getDoctors(): Promise<Doctor[]> {
+  try {
+    const { data } = await apiClient.get<Doctor[]>('/doctors?limit=9');
+    return data;
+  } catch (error) {
+    console.warn('Backend API unavailable, falling back to mock doctors data:', error);
+    return MOCK_DOCTORS;
+  }
+}

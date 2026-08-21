@@ -12,21 +12,25 @@ export const SearchForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex items-center gap-2 p-1.5 bg-background w-[658px] rounded-3xl">
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 p-1.5 bg-background w-full max-w-[658px] rounded-2xl sm:rounded-3xl"
+    >
       <Input
         type="text"
         placeholder="Введите симптомы (например: головная боль, кашель...)"
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-        className='w-[430px]'
+        className="w-full"
       />
 
-      <Button type="submit" variant="accent" className='p-0 w-[350px]!'>
+      <Button
+        type="submit"
+        variant="accent"
+        className="w-full sm:w-auto shrink-0 justify-center min-w-[140px] md:min-w-[180px]"
+      >
         Поиск
       </Button>
     </form>
   );
 };
-
-
-

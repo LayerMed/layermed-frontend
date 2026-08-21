@@ -12,9 +12,68 @@ const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://layermed.uz';
+
 export const metadata: Metadata = {
-  title: "LayerMED - Современный подход к поиску врача",
-  description: "LayerMED - Современный подход к поиску врача. Наша цель оптимизировать поиск врача до 5 минут активного поиска.",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "LayerMed - Запись к врачу онлайн и поиск специалистов",
+    template: "%s | LayerMed",
+  },
+  description: "LayerMed — умная медицинская платформа. Найдите проверенного врача, изучите реальные отзывы и запишитесь на прием онлайн за 5 минут.",
+  keywords: [
+    "запись к врачу",
+    "поиск врача",
+    "медицинский центр",
+    "врачи Ташкент",
+    "клиники онлайн",
+    "консультация врача",
+    "LayerMed",
+  ],
+  authors: [{ name: "LayerMed Team" }],
+  creator: "LayerMed",
+  publisher: "LayerMed",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "LayerMed - Запись к врачу онлайн и поиск специалистов",
+    description: "Найдите проверенного квалифицированного врача и запишитесь на прием онлайн за пару кликов.",
+    url: siteUrl,
+    siteName: "LayerMed",
+    locale: "ru_RU",
+    type: "website",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "LayerMed — поиск врачей и запись на прием онлайн",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "LayerMed - Запись к врачу онлайн",
+    description: "Умный поиск квалифицированных врачей и запись на прием за 5 минут.",
+    images: ["/og-image.jpg"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default function RootLayout({

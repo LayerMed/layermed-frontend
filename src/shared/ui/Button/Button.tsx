@@ -25,7 +25,7 @@ export const Button = ({
   return (
     <button className={`${baseStyles} ${variantStyles[variant]} ${className}`.trim()} {...props}>
       {variant === 'accent' && (
-        <span className="absolute inset-0 bg-accent-hover opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none" />
+        <span className="absolute inset-0 bg-accent-hover opacity-0 hover:opacity-100 transition-opacity duration-400 pointer-events-none" />
       )}
 
       <span className="relative z-10">{children}</span>
