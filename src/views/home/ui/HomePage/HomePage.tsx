@@ -3,6 +3,7 @@ import { Hero } from '@/widgets/hero';
 import { Ticker } from '@/widgets/ticker';
 import { CategoriesHero } from '@/widgets/categories-hero';
 import { DoctorsSlider } from '@/widgets/doctors-slider';
+import { BookingOffers } from '@/widgets/booking-offers';
 import { AboutUs } from '@/widgets/about-us';
 import { Footer } from '@/widgets/footer';
 
@@ -40,6 +41,7 @@ const HomePage = () => {
       <Ticker />
       <CategoriesHero />
       <DoctorsSlider />
+      <BookingOffers />
       <AboutUs />
       <Footer />
     </main>

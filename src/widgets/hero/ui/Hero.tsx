@@ -9,7 +9,8 @@ import { SearchForm } from '@/features/search';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export const Hero = () => {
+export const Hero = ({ primaryHeading = true }: { primaryHeading?: boolean }) => {
+  const Heading = primaryHeading ? 'h1' : 'p';
   const containerRef = useRef<HTMLDivElement>(null);
   const icon1Ref = useRef<HTMLDivElement>(null);
   const icon2Ref = useRef<HTMLDivElement>(null);
@@ -53,10 +54,10 @@ export const Hero = () => {
   }, []);
 
   const badges = [
-    { id: 1, label: 'Верифицированные врачи', bgClass: 'bg-[#D7F1FF]', textClass: 'text-[#1F79AA]', shadowClass: 'shadow-[0px_9px_10px_-5px_#D7F1FF99]' },
-    { id: 2, label: 'Оправданная сумма', bgClass: 'bg-[#E8FFB3]', textClass: 'text-[#007600]', shadowClass: '' },
-    { id: 3, label: 'Реальные отзывы', bgClass: 'bg-[#FFF6B5]', textClass: 'text-[#8F5100]', shadowClass: '' },
-    { id: 4, label: 'Полная приватность', bgClass: 'bg-[#E7E2FF]', textClass: 'text-[#4C4085]', shadowClass: '' },
+    { id: 1, label: 'Направления врачей', bgClass: 'bg-[#D7F1FF]', textClass: 'text-[#1F79AA]', shadowClass: 'shadow-[0px_9px_10px_-5px_#D7F1FF99]' },
+    { id: 2, label: 'Предложения услуг', bgClass: 'bg-[#E8FFB3]', textClass: 'text-[#007600]', shadowClass: '' },
+    { id: 3, label: 'Отзывы пациентов', bgClass: 'bg-[#FFF6B5]', textClass: 'text-[#8F5100]', shadowClass: '' },
+    { id: 4, label: 'Заявка на приём', bgClass: 'bg-[#E7E2FF]', textClass: 'text-[#4C4085]', shadowClass: '' },
   ];
 
   return (
@@ -133,7 +134,7 @@ export const Hero = () => {
 
         <div className="flex items-center justify-between px-1 sm:px-3 mt-6 sm:mt-8">
           <div className="w-full lg:max-w-[65%]">
-            <h1 className="font-bold text-[32px] sm:text-[42px] md:text-[50px] leading-[1.1] flex flex-col gap-0 mb-4 sm:mb-6">
+            <Heading className="font-bold text-[32px] sm:text-[42px] md:text-[50px] leading-[1.1] flex flex-col gap-0 mb-4 sm:mb-6">
               <span>Найдите врача</span>
               <span
                 className="inline-block py-1 -my-1 text-[36px] sm:text-[48px] md:text-[60px] leading-[1.1] bg-clip-text text-transparent"
@@ -143,10 +144,10 @@ export const Hero = () => {
               >
                 Которому доверяете
               </span>
-            </h1>
+            </Heading>
 
             <p className="max-w-[829px] mb-8 sm:mb-12 text-sm sm:text-base text-[#95A8B4] font-medium leading-relaxed">
-              На нашем сайте более сотен квалифицированных врачей, к которым вы можете быстро записаться на прием. Мы гарантируем, что найдете подходящего специалиста и получите необходимую медицинскую помощь в кратчайшие сроки.
+              Найдите подходящее направление, изучите предложения врачей и отправьте заявку на удобное время.
             </p>
 
             <SearchForm />
@@ -155,11 +156,11 @@ export const Hero = () => {
           <div className="hidden lg:block shrink-0">
             <Image
               src="/hero-image.png"
-              alt="Hero image"
+              alt=""
               width={460}
               height={460}
               priority
-              className="mb-8 mt-4 object-contain max-w-[400px] xl:max-w-[460px] h-auto"
+              className="mb-8 mt-4 object-contain w-auto max-w-[400px] xl:max-w-[460px] h-auto"
             />
           </div>
         </div>

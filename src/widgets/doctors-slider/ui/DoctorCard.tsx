@@ -1,5 +1,7 @@
+'use client';
+
 import Image from 'next/image';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/shared/ui';
 import { Doctor } from '../model/types';
 
@@ -9,6 +11,7 @@ interface DoctorCardProps {
 }
 
 export function DoctorCard({ doctor, isActive = false }: DoctorCardProps) {
+  const router = useRouter();
   const {
     id,
     name,
@@ -18,8 +21,9 @@ export function DoctorCard({ doctor, isActive = false }: DoctorCardProps) {
     reviewsCount,
     avatarUrl,
     clinic,
-    city = 'Ташкент',
-    isOnline = true,
+    city,
+    isOnline,
+    minPrice,
     price,
   } = doctor;
 
@@ -40,70 +44,65 @@ export function DoctorCard({ doctor, isActive = false }: DoctorCardProps) {
     >
       <div className="flex items-start gap-3 sm:gap-4 p-2 sm:p-0">
         <div className="relative w-[90px] h-[110px] sm:w-[120px] sm:h-[141px] shrink-0 overflow-hidden rounded-[20px] sm:rounded-[23px] bg-background border border-black/5">
-          <Image
-            src={avatarUrl}
-            alt={name}
-            fill
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
-          />
+          {avatarUrl ? (
+            <Image src={avatarUrl} alt={name ?? 'Врач'} fill className="object-cover transition-transform duration-300 group-hover:scale-105" />
+          ) : (
+            <div aria-hidden="true" className="flex h-full items-center justify-center bg-primary/10 text-4xl font-semibold text-primary/40">+</div>
+          )}
         </div>
 
         <div className="min-w-0 flex-1 py-0.5">
           <h3 className="text-xl sm:text-[26px] font-bold text-[#000] truncate mb-1 leading-tight">
-            {name}
+            {name ?? `Врач №${id}`}
           </h3>
 
           <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-2 truncate">
-            <span className="text-[#0095ff] font-bold text-sm sm:text-[18px] truncate">{specialty}</span>
+            <span className="text-[#0095ff] font-bold text-sm sm:text-[18px] truncate">{specialty ?? 'Специальность не указана'}</span>
             <span className="text-[#95a8b4] font-semibold text-xs sm:text-[18px] shrink-0">Стаж {experience} лет</span>
           </div>
 
           <div className="flex items-center gap-2 mb-2">
-            <div className="relative w-[100px] sm:w-[132px] h-[14px] rounded-full bg-background overflow-hidden border border-black/5 p-0.5 shrink-0">
+            {reviewsCount > 0 && <div className="relative w-[100px] sm:w-[132px] h-[14px] rounded-full bg-background overflow-hidden border border-black/5 p-0.5 shrink-0">
               <div
                 className={`h-full rounded-full transition-all duration-500 ${ratingBgColor}`}
                 style={{ width: `${ratingPercentage}%` }}
               />
-            </div>
-            <span className={`text-xs font-bold ${ratingTextColor}`}>{rating.toFixed(1)}</span>
+            </div>}
+            {reviewsCount > 0 ? <span className={`text-xs font-bold ${ratingTextColor}`}>{rating.toFixed(1)}</span> : <span className="text-xs text-foreground/50">Нет оценок</span>}
             <span className="text-[11px] text-foreground/50">{reviewsCount} отзывов</span>
           </div>
 
           <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
             <span className="inline-flex items-center justify-center min-w-[100px] sm:w-[162px] h-[30px] sm:h-[35px] rounded-[30px] px-[10px] sm:px-[12px] py-[6px] sm:py-[8px] bg-primary/10 text-[#0095ff] font-semibold text-xs sm:text-[16px] truncate">
-              {city || clinic}
+              {city || clinic || 'Клиника не указана'}
             </span>
-            {isOnline ? (
+            {isOnline === true ? (
               <span className="inline-flex items-center justify-center min-w-[80px] sm:w-[162px] h-[30px] sm:h-[35px] rounded-[30px] px-[10px] sm:px-[12px] py-[6px] sm:py-[8px] bg-emerald-500/10 text-emerald-600 font-semibold text-xs sm:text-[16px]">
                 Онлайн
               </span>
-            ) : (
+            ) : isOnline === false ? (
               <span className="inline-flex items-center justify-center min-w-[80px] sm:w-[162px] h-[30px] sm:h-[35px] rounded-[30px] px-[10px] sm:px-[12px] py-[6px] sm:py-[8px] bg-slate-500/10 text-slate-500 font-semibold text-xs sm:text-[16px]">
                 Офлайн
               </span>
-            )}
+            ) : null}
           </div>
         </div>
       </div>
 
       <div className="mt-3 sm:mt-4 p-2 sm:p-0 flex items-center justify-between gap-2 sm:gap-3">
         <span className="inline-flex items-center justify-center rounded-2xl bg-surface px-3 sm:px-4 h-[40px] sm:h-[46px] text-xs sm:text-[16px] font-semibold text-[#3a4e5b] whitespace-nowrap shrink-0">
-          {price.reception} ₽ • За приём
+          {price ? `${price.reception} ₽ • За приём` : minPrice != null ? `От ${minPrice.toLocaleString('ru-RU')} • минимальная цена` : 'Цена уточняется'}
         </span>
 
-        <Link
-          href={isActive ? `/doctors/${id}` : '#'}
-          tabIndex={isActive ? 0 : -1}
-          className={!isActive ? 'pointer-events-none' : ''}
+        <Button
+          type="button"
+          variant="accent"
+          hasImage
+          disabled={!isActive}
+          onClick={() => router.push(`/doctors/${id}`)}
         >
-          <Button
-            variant="accent"
-            hasImage
-            disabled={!isActive}
-          >
-            Подробнее
-          </Button>
-        </Link>
+          Подробнее
+        </Button>
       </div>
     </article>
   );

@@ -6,14 +6,15 @@ export interface DoctorPrice {
 
 export interface Doctor {
   id: string;
-  name: string;
-  specialty: string;
+  name: string | null;
+  specialty: string | null;
   experience: number;
   rating: number;
   reviewsCount: number;
-  avatarUrl: string;
+  avatarUrl: string | null;
   clinic: string;
-  city?: string;
-  isOnline?: boolean;
-  price: DoctorPrice;
+  city?: string | null;
+  isOnline?: boolean | null;
+  minPrice?: number | null;
+  price?: DoctorPrice;
 }

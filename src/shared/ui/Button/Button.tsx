@@ -8,7 +8,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   hasImage?: boolean
 }
 
-const baseStyles = 'relative cursor-pointer overflow-hidden inline-flex items-center justify-center w-fit px-[15px] py-[13.5px] text-base rounded-2xl font-semibold gap-x-[15px] group transition-all duration-400'
+const baseStyles = 'relative cursor-pointer overflow-hidden inline-flex items-center justify-center w-fit px-[15px] py-[13.5px] text-base rounded-2xl font-semibold gap-x-[15px] group transition-all duration-400 disabled:cursor-not-allowed disabled:opacity-50'
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary: 'bg-background hover:bg-[#D3DDE4]',

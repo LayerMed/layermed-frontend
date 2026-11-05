@@ -46,7 +46,7 @@ export const Footer = () => {
   }, []);
 
   return (
-    <footer ref={containerRef} className="relative overflow-hidden bg-gradient-to-r from-[#38B6FF] via-[#34AAFF] to-[#217EE8] text-white rounded-[45px] my-6 p-8 md:p-12 pb-6 md:pb-10 flex flex-col justify-between">
+    <footer id="contacts" ref={containerRef} className="relative overflow-hidden bg-gradient-to-r from-[#38B6FF] via-[#34AAFF] to-[#217EE8] text-white rounded-[45px] my-6 p-8 md:p-12 pb-6 md:pb-10 flex flex-col justify-between scroll-mt-6">
       {/* Background Parallax Icons */}
       <div
         ref={icon1Ref}
@@ -79,7 +79,7 @@ export const Footer = () => {
               </h2>
             </Link>
             <p className="max-w-[380px] text-sm md:text-[15px] font-medium text-white/80 leading-relaxed">
-              LayerMed-компания которая объединяет сотни врачей с нашими пользователями, чтобы сделать медицинские услуги более доступными и удобными!
+              LayerMed помогает находить врачей и отправлять заявки на медицинские услуги.
             </p>
           </div>
 
@@ -99,21 +99,7 @@ export const Footer = () => {
                     Медицинские направления
                   </Link>
                 </li>
-                <li>
-                  <Link href="/clinics" className="hover:text-white transition-colors">
-                    Клиники
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/online-consultations" className="hover:text-white transition-colors">
-                    Онлайн-консультации
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/reviews" className="hover:text-white transition-colors">
-                    Отзывы
-                  </Link>
-                </li>
+                <li><Link href="/#booking-offers" className="hover:text-white transition-colors">Услуги и запись</Link></li>
               </ul>
             </div>
 
@@ -121,46 +107,14 @@ export const Footer = () => {
               <h3 className="font-bold text-lg md:text-xl text-white mb-4">
                 Врачам и Клиникам
               </h3>
-              <ul className="space-y-2.5 text-sm md:text-[15px] font-medium text-white/80">
-                <li>
-                  <Link href="/partner" className="hover:text-white transition-colors">
-                    Стать партнером
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/integration" className="hover:text-white transition-colors">
-                    Подключение к платформе
-                </Link>
-                </li>
-                <li>
-                  <Link href="/rules" className="hover:text-white transition-colors">
-                    Правила размещения
-                  </Link>
-                </li>
-              </ul>
+              <p className="text-sm text-white/80">Раздел для партнёров пока недоступен.</p>
             </div>
 
             <div className="flex flex-col items-center lg:items-start">
               <h3 className="font-bold text-lg md:text-xl text-white mb-4">
                 Контакты и Поддержка
               </h3>
-              <ul className="space-y-2.5 text-sm md:text-[15px] font-medium text-white/80">
-                <li>
-                  <a href="tel:+998901234567" className="hover:text-white transition-colors block">
-                    +998 (90) 123 45 67
-                  </a>
-                </li>
-                <li>
-                  <a href="mailto:support@layermed.com" className="hover:text-white transition-colors block">
-                    support@layermed.com <span className="block text-xs text-white/70 mt-0.5">(Пн-Вс: 08:00 – 20:00)</span>
-                  </a>
-                </li>
-                <li>
-                  <Link href="/terms" className="hover:text-white transition-colors">
-                    Правила размещения
-                  </Link>
-                </li>
-              </ul>
+              <p className="text-sm text-white/80">Контактные данные пока не опубликованы.</p>
             </div>
           </div>
         </div>

@@ -1,23 +1,40 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
-import Link from 'next/link';
+import React, { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Button } from '@/shared/ui';
-import { Category } from '../model/types';
+import { useSpecialties, useSpecialtyCounts } from '@/entities/specialty';
+import { MOCK_CATEGORIES } from '../model/mockCategories';
+import { mapSpecialtyDtoToCategory } from '../model/mapSpecialtyDtoToCategory';
 import { CategoryCard } from './CategoryCard';
 
 gsap.registerPlugin(ScrollTrigger);
 
-interface CategoriesHeroClientProps {
-  categories: Category[];
-}
-
-export function CategoriesHeroClient({ categories }: CategoriesHeroClientProps) {
+export function CategoriesHeroClient() {
+  const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
   const icon1Ref = useRef<HTMLDivElement>(null);
   const icon2Ref = useRef<HTMLDivElement>(null);
+  const [showDemo, setShowDemo] = useState(false);
+  const specialtiesQuery = useSpecialties();
+  const countsQuery = useSpecialtyCounts();
+
+  const countsById = new Map<number, number>();
+  for (const count of countsQuery.data ?? []) {
+    countsById.set(count.id, count.doctors_count);
+  }
+
+  const isDemo = !specialtiesQuery.data && specialtiesQuery.isError && showDemo;
+  const categories = specialtiesQuery.data
+    ? specialtiesQuery.data.map((specialty) =>
+        mapSpecialtyDtoToCategory(specialty, countsById.get(specialty.id) ?? null)
+      )
+    : isDemo ? MOCK_CATEGORIES : [];
+  const isLoading = !specialtiesQuery.data && specialtiesQuery.isPending;
+  const hasError = !specialtiesQuery.data && specialtiesQuery.isError && !isDemo;
+  const isEmpty = specialtiesQuery.isSuccess && categories.length === 0;
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -84,24 +101,64 @@ export function CategoriesHeroClient({ categories }: CategoriesHeroClientProps) 
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 px-3">
+        {isDemo && (
+          <div role="status" className="mx-3 mb-5 rounded-2xl bg-background p-4 text-sm text-foreground">
+            Показаны демонстрационные категории. Данные врачей и количество в них не относятся к API.
+            <Button type="button" onClick={() => void specialtiesQuery.refetch()} className="ml-3 !py-2">
+              Повторить загрузку
+            </Button>
+          </div>
+        )}
+
+        {specialtiesQuery.data && countsQuery.isError && (
+          <div role="alert" className="mx-3 mb-5 rounded-2xl bg-background p-4 text-sm text-foreground">
+            Количество врачей временно недоступно.
+            <Button type="button" onClick={() => void countsQuery.refetch()} className="ml-3 !py-2">
+              Повторить
+            </Button>
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 px-3" aria-busy={isLoading}>
+          {isLoading && Array.from({ length: 6 }, (_, index) => (
+            <div key={index} aria-hidden="true" className="min-h-[210px] animate-pulse rounded-2xl bg-background p-5">
+              <div className="mb-5 h-6 w-2/3 rounded-md bg-primary/10" />
+              <div className="mb-2 h-4 w-full rounded-md bg-primary/10" />
+              <div className="mb-8 h-4 w-4/5 rounded-md bg-primary/10" />
+              <div className="h-10 w-1/2 rounded-2xl bg-primary/10" />
+            </div>
+          ))}
+
+          {hasError && (
+            <div role="alert" className="col-span-full rounded-2xl bg-background p-6 text-center text-foreground">
+              <p className="mb-4">Не удалось загрузить направления. Попробуйте ещё раз.</p>
+              <div className="flex flex-wrap justify-center gap-3">
+                <Button type="button" onClick={() => void specialtiesQuery.refetch()} variant="accent">Повторить</Button>
+                <Button type="button" onClick={() => setShowDemo(true)}>Показать демо</Button>
+              </div>
+            </div>
+          )}
+
+          {isEmpty && (
+            <p role="status" className="col-span-full rounded-2xl bg-background p-6 text-center text-foreground">
+              Направлений пока нет.
+            </p>
+          )}
+
           {categories.slice(0, 12).map((category, index) => (
-            <div
-              key={category.id}
-              className={index >= 6 ? 'hidden md:block' : undefined}
-            >
-              <CategoryCard category={category} />
+            <div key={category.id} className={index >= 6 ? 'hidden md:block' : undefined}>
+              <CategoryCard category={category} countLoading={!isDemo && countsQuery.isPending} />
             </div>
           ))}
         </div>
 
-        <div className="mt-8 flex justify-center">
-          <Link href="/categories">
-            <Button variant="accent" hasImage>
+        {categories.length > 0 && (
+          <div className="mt-8 flex justify-center">
+            <Button type="button" variant="accent" hasImage onClick={() => router.push('/categories')}>
               Показать все категории
             </Button>
-          </Link>
-        </div>
+          </div>
+        )}
       </div>
     </section>
   );

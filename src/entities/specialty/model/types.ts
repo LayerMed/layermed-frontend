@@ -1,11 +1,13 @@
-export interface Specialty {
+export interface SpecialtyReadDto {
   id: number;
   name: string;
   description: string;
-  doctorsCount?: number;
-  slug?: string;
-  isNew?: boolean;
   created_at: string;
   updated_at: string;
 }
 
+export interface SpecialtyCountReadDto {
+  id: number;
+  name: string;
+  doctors_count: number;
+}

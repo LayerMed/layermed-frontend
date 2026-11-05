@@ -1,8 +1,7 @@
 export interface Category {
-  id: string;
-  slug: string;
+  id: number;
   title: string;
   description: string;
-  doctorsCount: number;
+  doctorsCount: number | null;
   isNew?: boolean;
 }

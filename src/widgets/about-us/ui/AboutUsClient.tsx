@@ -4,24 +4,26 @@ import React, { useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useDoctors } from '@/entities/doctor';
+import type { AboutStatsData } from '../model/types';
 
 gsap.registerPlugin(ScrollTrigger);
 
 interface AboutUsClientProps {
   title: string;
   subtitle: string;
-  doctorsDisplay: string;
-  usersDisplay: string;
-  ratingDisplay: string;
+  initialStats?: AboutStatsData;
 }
 
 export function AboutUsClient({
   title,
   subtitle,
-  doctorsDisplay,
-  usersDisplay,
-  ratingDisplay,
+  initialStats,
 }: AboutUsClientProps) {
+  const doctorsQuery = useDoctors();
+  const doctorsDisplay = initialStats ? String(initialStats.doctorsCount) : doctorsQuery.data ? String(doctorsQuery.data.total) : doctorsQuery.isPending ? '…' : '—';
+  const usersDisplay = initialStats ? String(initialStats.usersCount) : '—';
+  const ratingDisplay = initialStats ? initialStats.averageRating.toFixed(1) : '—';
   const containerRef = useRef<HTMLDivElement>(null);
   const logoRef = useRef<HTMLDivElement>(null);
   const iconRef = useRef<HTMLDivElement>(null);
@@ -60,7 +62,7 @@ export function AboutUsClient({
   }, []);
 
   return (
-    <section ref={containerRef} className="relative p-5 pt-10 bg-white rounded-[45px] my-6 overflow-hidden">
+    <section id="about" ref={containerRef} className="relative p-5 pt-10 bg-white rounded-[45px] my-6 overflow-hidden scroll-mt-6">
       {/* Background Parallax Icon */}
       <div
         ref={iconRef}
@@ -107,7 +109,7 @@ export function AboutUsClient({
                   Квалифицированных врачей
                 </h3>
                 <p className="text-sm sm:text-[15px] text-[#95A8B4] font-medium leading-relaxed">
-                  Опытные медицинские специалисты, обладающие высокой квалификацией и знаниями в своей области.
+                  {doctorsQuery.isError && !initialStats ? 'Число специалистов временно недоступно.' : 'Врачи, представленные в каталоге LayerMed.'}
                 </p>
               </div>
             </div>
@@ -124,7 +126,7 @@ export function AboutUsClient({
                   Пользователей по всей Центральной Азии
                 </h3>
                 <p className="text-sm sm:text-[15px] text-[#95A8B4] font-medium leading-relaxed">
-                  Свыше пяти тысяч довольных и постоянных пользователей по всей Центральной Азии.
+                  {initialStats ? 'Зарегистрированные пользователи платформы.' : 'Публичная статистика пользователей пока недоступна.'}
                 </p>
               </div>
             </div>
@@ -141,7 +143,7 @@ export function AboutUsClient({
                   Средний рейтинг оставляемый пользователями
                 </h3>
                 <p className="text-sm sm:text-[15px] text-[#95A8B4] font-medium leading-relaxed">
-                  Средняя оценка всех наших постоянных пользователей
+                  {initialStats ? 'Средняя оценка врачей.' : 'Общий рейтинг пока недоступен.'}
                 </p>
               </div>
             </div>

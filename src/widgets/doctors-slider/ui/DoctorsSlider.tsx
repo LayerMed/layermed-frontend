@@ -1,20 +1,23 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
+import React, { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { useRouter } from 'next/navigation';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Keyboard } from 'swiper/modules';
+import { Autoplay, Keyboard } from 'swiper/modules';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 import 'swiper/css';
 
 import { Button } from '@/shared/ui';
+import { useDoctors } from '@/entities/doctor';
 import { Doctor } from '../model/types';
-import { MOCK_DOCTORS } from '../api/getDoctors';
+import { MOCK_DOCTORS } from '../model/mockDoctors';
+import { mapDoctorDtoToDoctor } from '../model/mapDoctorDtoToDoctor';
 import { DoctorCard } from './DoctorCard';
 
 gsap.registerPlugin(ScrollTrigger);
+const subscribe = () => () => {};
 
 interface DoctorsSliderProps {
   doctors?: Doctor[];
@@ -23,18 +26,25 @@ interface DoctorsSliderProps {
 }
 
 export function DoctorsSlider({
-  doctors = MOCK_DOCTORS,
+  doctors: suppliedDoctors,
   title = 'Наши лучшие специалисты',
   subtitle = 'Выберите подходящего врача и запишитесь на приём онлайн в пару кликов.',
 }: DoctorsSliderProps) {
-  const [isMounted, setIsMounted] = useState(false);
+  const router = useRouter();
+  const doctorsQuery = useDoctors();
+  const [showDemo, setShowDemo] = useState(false);
+  const hasApiData = Boolean(doctorsQuery.data);
+  const isDemo = !suppliedDoctors && !hasApiData && doctorsQuery.isError && showDemo;
+  const doctors = suppliedDoctors ?? (hasApiData
+    ? doctorsQuery.data!.items.map(mapDoctorDtoToDoctor)
+    : isDemo ? MOCK_DOCTORS : []);
+  const isLoading = !suppliedDoctors && !hasApiData && doctorsQuery.isPending;
+  const hasError = !suppliedDoctors && !hasApiData && doctorsQuery.isError && !isDemo;
+  const isEmpty = !suppliedDoctors && doctorsQuery.isSuccess && doctors.length === 0;
+  const isMounted = useSyncExternalStore(subscribe, () => true, () => false);
   const containerRef = useRef<HTMLDivElement>(null);
   const icon1Ref = useRef<HTMLDivElement>(null);
   const icon2Ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -100,13 +110,37 @@ export function DoctorsSlider({
           </p>
         </div>
 
-        <div className="relative py-4" suppressHydrationWarning>
-          {isMounted ? (
+        {isDemo && <div role="status" className="mx-3 mb-5 rounded-2xl bg-background p-4 text-sm text-foreground">
+          Показаны демонстрационные врачи. Данные не получены из API.
+          <Button type="button" onClick={() => void doctorsQuery.refetch()} className="ml-3 !py-2">Повторить загрузку</Button>
+        </div>}
+
+        <div className="relative py-4" aria-busy={isLoading}>
+          {isLoading && <div role="status" aria-label="Загрузка врачей" className="flex gap-4 overflow-hidden px-3 py-4">
+            {Array.from({ length: 3 }, (_, index) => <div key={index} aria-hidden="true" className="h-[227px] w-full min-w-[280px] max-w-[600px] animate-pulse rounded-3xl bg-background p-5">
+              <div className="float-left mr-4 h-28 w-24 rounded-2xl bg-primary/10" />
+              <div className="mb-4 h-6 w-2/3 rounded bg-primary/10" />
+              <div className="mb-4 h-4 w-1/2 rounded bg-primary/10" />
+              <div className="h-4 w-1/3 rounded bg-primary/10" />
+            </div>)}
+          </div>}
+
+          {hasError && <div role="alert" className="mx-3 rounded-2xl bg-background p-6 text-center text-foreground">
+            <p className="mb-4">Не удалось загрузить врачей. Попробуйте ещё раз.</p>
+            <div className="flex flex-wrap justify-center gap-3">
+              <Button type="button" onClick={() => void doctorsQuery.refetch()} variant="accent">Повторить</Button>
+              <Button type="button" onClick={() => setShowDemo(true)}>Показать демо</Button>
+            </div>
+          </div>}
+
+          {isEmpty && <p role="status" className="mx-3 rounded-2xl bg-background p-6 text-center text-foreground">Врачей пока нет.</p>}
+
+          {doctors.length > 0 && (isMounted ? (
             <Swiper
-              modules={[Keyboard]}
+              modules={[Keyboard, Autoplay]}
               slidesPerView={1}
               centeredSlides={true}
-              loop={true}
+              loop={doctors.length > 3}
               spaceBetween={24}
               speed={800}
               grabCursor={true}
@@ -115,7 +149,7 @@ export function DoctorsSlider({
                 enabled: true,
                 onlyInViewport: true,
               }}
-              autoplay={false}
+              autoplay={doctors.length > 1 ? { delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: true } : false}
               navigation={false}
               pagination={false}
               breakpoints={{
@@ -158,16 +192,14 @@ export function DoctorsSlider({
                 </div>
               ))}
             </div>
-          )}
+          ))}
         </div>
 
-        <div className="mt-8 flex justify-center">
-          <Link href="/doctors">
-            <Button variant="accent" hasImage>
-              Показать всех врачей
-            </Button>
-          </Link>
-        </div>
+        {doctors.length > 0 && <div className="mt-8 flex justify-center">
+          <Button type="button" variant="accent" hasImage onClick={() => router.push('/doctors')}>
+            Показать всех врачей
+          </Button>
+        </div>}
       </div>
     </section>
   );

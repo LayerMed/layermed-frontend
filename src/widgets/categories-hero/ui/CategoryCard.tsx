@@ -1,13 +1,17 @@
-import Link from 'next/link';
+'use client';
+
+import { useRouter } from 'next/navigation';
 import { Button } from '@/shared/ui';
 import { Category } from '../model/types';
 
 interface CategoryCardProps {
   category: Category;
+  countLoading?: boolean;
 }
 
-export function CategoryCard({ category }: CategoryCardProps) {
-  const { title, description, doctorsCount, slug, isNew } = category;
+export function CategoryCard({ category, countLoading = false }: CategoryCardProps) {
+  const router = useRouter();
+  const { id, title, description, doctorsCount, isNew } = category;
 
   return (
     <article className="group relative flex flex-col justify-between w-full rounded-2xl bg-background p-5 transition-all border border-black/5">
@@ -29,15 +33,16 @@ export function CategoryCard({ category }: CategoryCardProps) {
       </div>
 
       <div className="mt-2 flex items-center justify-between gap-3">
-        <span className="inline-flex items-center rounded-2xl bg-white px-[15px] py-[13.5px] text-[16px] font-semibold text-[#3a4e5b]">
-          {doctorsCount} врачей
+        <span
+          className="inline-flex items-center rounded-2xl bg-surface px-[15px] py-[13.5px] text-[16px] font-semibold text-[#3a4e5b]"
+          aria-label={doctorsCount === null ? countLoading ? 'Количество врачей загружается' : 'Количество врачей недоступно' : undefined}
+        >
+          {doctorsCount === null ? countLoading ? '… врачей' : '— врачей' : `${doctorsCount} врачей`}
         </span>
 
-        <Link href={`/doctors?category=${slug}`}>
-          <Button variant="accent" hasImage>
-            Выбрать врача
-          </Button>
-        </Link>
+        <Button type="button" variant="accent" hasImage onClick={() => router.push(`/doctors?specialty_ids=${id}`)}>
+          Выбрать врача
+        </Button>
       </div>
     </article>
   );

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
+import { ReactQueryProvider } from "@/shared/providers/ReactQueryProvider";
+import { AuthProvider } from "@/features/auth";
 import "./globals.css";
 
 const inter = Inter({
@@ -20,7 +22,7 @@ export const metadata: Metadata = {
     default: "LayerMed - Запись к врачу онлайн и поиск специалистов",
     template: "%s | LayerMed",
   },
-  description: "LayerMed — умная медицинская платформа. Найдите проверенного врача, изучите реальные отзывы и запишитесь на прием онлайн за 5 минут.",
+  description: "LayerMed — каталог медицинских направлений, врачей и предложений услуг. Отправьте заявку на приём онлайн.",
   keywords: [
     "запись к врачу",
     "поиск врача",
@@ -43,7 +45,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "LayerMed - Запись к врачу онлайн и поиск специалистов",
-    description: "Найдите проверенного квалифицированного врача и запишитесь на прием онлайн за пару кликов.",
+    description: "Найдите направление, изучите предложения врачей и отправьте заявку на приём.",
     url: siteUrl,
     siteName: "LayerMed",
     locale: "ru_RU",
@@ -60,7 +62,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "LayerMed - Запись к врачу онлайн",
-    description: "Умный поиск квалифицированных врачей и запись на прием за 5 минут.",
+    description: "Поиск медицинских направлений и отправка заявки на приём.",
     images: ["/og-image.jpg"],
   },
   robots: {
@@ -86,7 +88,9 @@ export default function RootLayout({
       lang="ru"
       className={`${inter.variable} ${spaceGrotesk.variable} font-sans h-full antialiased p-5`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <ReactQueryProvider><AuthProvider>{children}</AuthProvider></ReactQueryProvider>
+      </body>
     </html>
   );
 }

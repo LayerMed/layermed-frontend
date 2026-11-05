@@ -1,5 +1,4 @@
-import { apiClient } from '@/shared/api/axios';
-import { Doctor } from '../model/types';
+import type { Doctor } from './types';
 
 export const MOCK_DOCTORS: Doctor[] = [
   {
@@ -157,12 +156,3 @@ export const MOCK_DOCTORS: Doctor[] = [
   },
 ];
 
-export async function getDoctors(): Promise<Doctor[]> {
-  try {
-    const { data } = await apiClient.get<Doctor[]>('/doctors?limit=9');
-    return data;
-  } catch (error) {
-    console.warn('Backend API unavailable, falling back to mock doctors data:', error);
-    return MOCK_DOCTORS;
-  }
-}
